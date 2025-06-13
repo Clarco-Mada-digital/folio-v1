@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Manager Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            color: #5a67d8;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5a67d8, #667eea);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4c51bf, #5a67d8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 103, 216, 0.4);
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .prompt-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .prompt-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prompt-item:hover {
+            background: #edf2f7;
+            border-color: #5a67d8;
+            transform: translateX(5px);
+        }
+
+        .prompt-item.active {
+            background: #ebf4ff;
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 2px rgba(90, 103, 216, 0.1);
+        }
+
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .prompt-category {
+            background: #5a67d8;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .prompt-preview {
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .variables-section {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .variable-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .variable-item input {
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #5a67d8;
+        }
+
+        .stat-label {
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .export-section {
+            background: #fffaf0;
+            border: 1px solid #fbd38d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .ai-models {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .model-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover, .model-card.selected {
+            border-color: #5a67d8;
+            background: #f7faff;
+        }
+
+        .model-name {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .model-description {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .optimization-tips {
+            background: #f0f4ff;
+            border: 1px solid #c3dafe;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .tip {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #5a67d8;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.success {
+            background: #48bb78;
+        }
+
+        .notification.error {
+            background: #f56565;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Prompt Manager Pro</h1>
+            <p>Optimisez vos interactions avec l'intelligence artificielle</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPrompts">0</div>
+                <div class="stat-label">Prompts Créés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCategories">0</div>
+                <div class="stat-label">Catégories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalVariables">0</div>
+                <div class="stat-label">Variables</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="optimizationScore">85%</div>
+                <div class="stat-label">Score d'Optimisation</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="sidebar">
+                <div class="card">
+                    <h3>📝 Créer un Prompt</h3>
+                    <form id="promptForm">
+                        <div class="form-group">
+                            <label for="promptTitle">Titre du Prompt</label>
+                            <input type="text" id="promptTitle" class="form-control" placeholder="Ex: Création d'application Laravel" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="promptCategory">Catégorie</label>
+                            <select id="promptCategory" class="form-control" required>
+                                <option value="">Sélectionner une catégorie</option>
+                                <option value="development">Développement</option>
+                                <option value="writing">Rédaction</option>
+                                <option value="analysis">Analyse</option>
+                                <option value="creative">Créatif</option>
+                                <option value="business">Business</option>
+                                <option value="education">Éducation</option>
+                                <option value="custom">Personnalisé</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aiModel">Modèle IA Cible</label>
+                            <select id="aiModel" class="form-control">
+                                <option value="general">Général</option>
+                                <option value="gpt4">ChatGPT-4</option>
+                                <option value="claude">Claude</option>
+                                <option value="gemini">Gemini</option>
+                                <option value="llama">LLaMA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promptContent">Contenu du Prompt</label>
+                            <textarea id="promptContent" class="form-control" placeholder="Écrivez votre prompt ici... Utilisez {variable} pour les variables dynamiques" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promptTags">Tags (séparés par des virgules)</label>
+                            <input type="text" id="promptTags" class="form-control" placeholder="laravel, web, php, backend">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">💾 Sauvegarder le Prompt</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Recherche & Filtres</h3>
+                    <div class="search-box">
+                        <input type="text" id="searchPrompts" class="form-control" placeholder="Rechercher des prompts...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Filtrer par catégorie</label>
+                        <select id="filterCategory" class="form-control">
+                            <option value="">Toutes les catégories</option>
+                            <option value="development">Développement</option>
+                            <option value="writing">Rédaction</option>
+                            <option value="analysis">Analyse</option>
+                            <option value="creative">Créatif</option>
+                            <option value="business">Business</option>
+                            <option value="education">Éducation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Modèle IA</label>
+                        <select id="filterModel" class="form-control">
+                            <option value="">Tous les modèles</option>
+                            <option value="general">Général</option>
+                            <option value="gpt4">ChatGPT-4</option>
+                            <option value="claude">Claude</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>📚 Mes Prompts</h3>
+                        <div>
+                            <button class="btn btn-secondary btn-small" onclick="exportPrompts()">📤 Exporter</button>
+                            <button class="btn btn-success btn-small" onclick="importPrompts()">📥 Importer</button>
+                            <button class="btn btn-primary btn-small" onclick="openOptimizer()">🚀 Optimiseur</button>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-list" id="promptList">
+                        <div style="text-align: center; color: #718096; padding: 40px;">
+                            <h4>Aucun prompt créé</h4>
+                            <p>Commencez par créer votre premier prompt avec le formulaire à gauche</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="promptEditor" style="display: none;">
+                    <h3>✏️ Éditeur de Prompt</h3>
+                    <div id="selectedPromptContent"></div>
+                    
+                    <div class="variables-section" id="variablesSection" style="display: none;">
+                        <h4>🔧 Variables Détectées</h4>
+                        <div id="variablesList"></div>
+                        <button type="button" class="btn btn-primary" onclick="generateFinalPrompt()">🎯 Générer le Prompt Final</button>
+                    </div>
+
+                    <div class="optimization-tips">
+                        <h4>💡 Conseils d'Optimisation</h4>
+                        <div id="optimizationTips"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Optimiseur -->
+    <div id="optimizerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOptimizer()">&times;</span>
+            <h2>🚀 Optimiseur de Prompts IA</h2>
+            
+            <div class="ai-models">
+                <div class="model-card" data-model="gpt4">
+                    <div class="model-name">ChatGPT-4</div>
+                    <div class="model-description">Excellent pour les tâches complexes, le raisonnement et la créativité</div>
+                </div>
+                <div class="model-card" data-model="claude">
+                    <div class="model-name">Claude</div>
+                    <div class="model-description">Idéal pour l'analyse, la programmation et les conversations longues</div>
+                </div>
+                <div class="model-card" data-model="gemini">
+                    <div class="model-name">Gemini</div>
+                    <div class="model-description">Performant pour la recherche et l'analyse multimodale</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="optimizePrompt">Prompt à optimiser</label>
+                <textarea id="optimizePrompt" class="form-control" rows="6" placeholder="Collez votre prompt ici pour l'optimiser..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" onclick="optimizePrompt()">🎯 Optimiser</button>
+
+            <div id="optimizationResults" style="margin-top: 20px; display: none;">
+                <h3>📊 Résultats d'Optimisation</h3>
+                <div id="optimizedPromptContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Résultat Final -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeResult()">&times;</span>
+            <h2>🎯 Prompt Final Généré</h2>
+            <div class="form-group">
+                <label>Prompt prêt à utiliser :</label>
+                <textarea id="finalPromptResult" class="form-control" rows="10" readonly></textarea>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="copyFinalPrompt()">📋 Copier</button>
+                <button class="btn btn-success" onclick="saveFinalPrompt()">💾 Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+
+    <script>
+        let prompts = JSON.parse(localStorage.getItem('aiPrompts')) || [];
+        let currentPromptIndex = -1;
+
+        // Templates de prompts prédéfinis
+        const promptTemplates = {
+            development: {
+                title: "Création d'Application Laravel",
+                content: `Tu es un expert développeur Laravel. Je veux créer une application {type_app} avec les fonctionnalités suivantes : {fonctionnalites}.
+
+Spécifications techniques :
+- Version Laravel : {version_laravel}
+- Base de données : {database}
+- Authentification : {auth_type}
+
+Peux-tu me fournir :
+1. La structure des migrations nécessaires
+2. Les modèles Eloquent avec leurs relations
+3. Les contrôleurs principaux
+4. Les routes essentielles
+5. Les vues Blade de base
+
+Assure-toi que le code respecte les bonnes pratiques Laravel et soit sécurisé.`,
+                tags: "laravel, php, development, web"
+            },
+            writing: {
+                title: "Rédaction d'Article Professionnel",
+                content: `Je veux que tu rédiges un article professionnel sur le sujet suivant : {sujet}.
+
+Contexte et objectifs :
+- Public cible : {public_cible}
+- Ton : {ton_article}
+- Longueur souhaitée : {longueur} mots
+- Objectif : {objectif}
+
+Structure demandée :
+1. Titre accrocheur
+2. Introduction engageante
+3. {nombre_sections} sections principales avec sous-titres
+4. Conclusion avec appel à l'action
+5. Mots-clés à intégrer : {mots_cles}
+
+Assure-toi que l'article soit optimisé SEO et engageant.`,
+                tags: "writing, article, seo, content"
+            }
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPrompts();
+            updateStats();
+            setupEventListeners();
+            loadTemplates();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('promptForm').addEventListener('submit', savePrompt);
+            document.getElementById('searchPrompts').addEventListener('input', filterPrompts);
+            document.getElementById('filterCategory').addEventListener('change', filterPrompts);
+            document.getElementById('filterModel').addEventListener('change', filterPrompts);
+            document.getElementById('importFile').addEventListener('change', handleImportFile);
+            
+            // Détection de variables en temps réel
+            document.getElementById('promptContent').addEventListener('input', detectVariables);
+        }
+
+        function loadTemplates() {
+            const categorySelect = document.getElementById('promptCategory');
+            categorySelect.addEventListener('change', function() {
+                const category = this.value;
+                if (promptTemplates[category]) {
+                    const template = promptTemplates[category];
+                    document.getElementById('promptTitle').value = template.title;
+                    document.getElementById('promptContent').value = template.content;
+                    document.getElementById('promptTags').value = template.tags;
+                    detectVariables();
+                }
+            });
+        }
+
+        function savePrompt(e) {
+            e.preventDefault();
+            
+            const prompt = {
+                id: Date.now(),
+                title: document.getElementById('promptTitle').value,
+                category: document.getElementById('promptCategory').value,
+                model: document.getElementById('aiModel').value,
+                content: document.getElementById('promptContent').value,
+                tags: document.getElementById('promptTags').value.split(',').map(tag => tag.trim()),
+                variables: extractVariables(document.getElementById('promptContent').value),
+                createdAt: new Date().toISOString(),
+                usage: 0
+            };
+
+            if (currentPromptIndex >= 0) {
+                prompts[currentPromptIndex] = { ...prompts[currentPromptIndex], ...prompt };
+                currentPromptIndex = -1;
+            } else {
+                prompts.push(prompt);
+            }
+
+            localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+            loadPrompts();
+            updateStats();
+            document.getElementById('promptForm').reset();
+            showNotification('Prompt sauvegardé avec succès !', 'success');
+        }
+
+        function loadPrompts() {
+            const promptList = document.getElementById('promptList');
+            
+            if (prompts.length === 0) {
+                promptList.innerHTML = `
+                    <div style="text-align: center; color: #718096; padding: 40px;">
+                        <h4>Aucun prompt créé</h4>
+                        <p>Commencez par créer votre premier prompt avec le formulaire à gauche</p>
+                    </div>
+                `;
+                return;
+            }
+
+            promptList.innerHTML = prompts.map((prompt, index) => `
+                <div class="prompt-item" onclick="selectPrompt(${index})">
+                    <div class="prompt-meta">
+                        <span class="prompt-title">${prompt.title}</span>
+                        <span class="prompt-category">${getCategoryLabel(prompt.category)}</span>
+                    </div>
+                    <div class="prompt-preview">${prompt.content.substring(0, 100)}...</div>
+                    <div class="tags">
+                        ${prompt.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #718096;">
+                        📊 ${prompt.usage || 0} utilisations • 🔧 ${prompt.variables.length} variables
+                        <button class="btn btn-danger btn-small" onclick="deletePrompt(${index}, event)" style="float: right;">🗑️</button>
+                        <button class="btn btn-secondary btn-small" onclick="editPrompt(${index}, event)" style="float: right; margin-right: 5px;">✏️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectPrompt(index) {
+            currentPromptIndex = index;
+            const prompt = prompts[index];
+            
+            // Marquer comme sélectionné
+            document.querySelectorAll('.prompt-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            // Afficher l'éditeur
+            const editor = document.getElementById('promptEditor');
+            editor.style.display = 'block';
+
+            // Incrémenter l'usage
+            prompt.usage = (prompt.usage || 0) + 1;
+            localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+
+            // Afficher le contenu
+            document.getElementById('selectedPromptContent').innerHTML = `
+                <div class="form-group">
+                    <label>Prompt sélectionné : <strong>${prompt.title}</strong></label>
+                    <textarea class="form-control" rows="8" readonly>${prompt.content}</textarea>
+                </div>
+            `;
+
+            // Afficher les variables
+            if (prompt.variables.length > 0) {
+                displayVariables(prompt.variables);
+            }
+
+            // Afficher les conseils d'optimisation
+            displayOptimizationTips(prompt);
+        }
+
+        function displayVariables(variables) {
+            const variablesSection = document.getElementById('variablesSection');
+            const variablesList = document.getElementById('variablesList');
+            
+            variablesSection.style.display = 'block';
+            variablesList.innerHTML = variables.map(variable => `
+                <div class="variable-item">
+                    <label style="min-width: 100px;">{${variable}}:</label>
+                    <input type="text" class="form-control" data-variable="${variable}" placeholder="Valeur pour ${variable}">
+                </div>
+            `).join('');
+        }
+
+        function generateFinalPrompt() {
+            if (currentPromptIndex < 0) return;
+            
+            const prompt = prompts[currentPromptIndex];
+            let finalContent = prompt.content;
+            
+            // Remplacer les variables
+            const variableInputs = document.querySelectorAll('#variablesList input[data-variable]');
+            variableInputs.forEach(input => {
+                const variable = input.dataset.variable;
+                const value = input.value || `[${variable}]`;
+                finalContent = finalContent.replace(new RegExp(`\\{${variable}\\}`, 'g'), value);
+            });
+
+            // Afficher dans la modal
+            document.getElementById('finalPromptResult').value = finalContent;
+            document.getElementById('resultModal').style.display = 'block';
+        }
+
+        function extractVariables(content) {
+            const regex = /\{([^}]+)\}/g;
+            const variables = [];
+            let match;
+            
+            while ((match = regex.exec(content)) !== null) {
+                if (!variables.includes(match[1])) {
+                    variables.push(match[1]);
+                }
+            }
+            
+            return variables;
+        }
+
+        function detectVariables() {
+            const content = document.getElementById('promptContent').value;
+            const variables = extractVariables(content);
+            
+            if (variables.length > 0) {
+                const preview = document.createElement('div');
+                preview.style.marginTop = '10px';
+                preview.style.padding = '10px';
+                preview.style.background = '#f0fff4';
+                preview.style.border = '1px solid #9ae6b4';
+                preview.style.borderRadius = '5px';
+                preview.innerHTML = `<small>🔧 Variables détectées: ${variables.map(v => `<code>{${v}}</code>`).join(', ')}</small>`;
+                
+                // Supprimer l'ancien aperçu s'il existe
+                const oldPreview = document.querySelector('#promptContent + div');
+                if (oldPreview) oldPreview.remove();
+                
+                document.getElementById('promptContent').parentNode.appendChild(preview);
+            }
+        }
+
+        function displayOptimizationTips(prompt) {
+            const tipsContainer = document.getElementById('optimizationTips');
+            const tips = generateOptimizationTips(prompt);
+            
+            tipsContainer.innerHTML = tips.map(tip => `
+                <div class="tip">
+                    <strong>${tip.title}:</strong> ${tip.description}
+                </div>
+            `).join('');
+        }
+
+        function generateOptimizationTips(prompt) {
+            const tips = [];
+            
+            // Analyse de la longueur
+            if (prompt.content.length < 100) {
+                tips.push({
+                    title: "Prompt trop court",
+                    description: "Ajoutez plus de contexte et d'exemples pour obtenir de meilleurs résultats."
+                });
+            }
+            
+            // Analyse des variables
+            if (prompt.variables.length === 0) {
+                tips.push({
+                    title: "Aucune variable détectée",
+                    description: "Utilisez des variables {nom_variable} pour rendre votre prompt réutilisable."
+                });
+            }
+            
+            // Analyse de la structure
+            if (!prompt.content.includes('1.') && !prompt.content.includes('-')) {
+                tips.push({
+                    title: "Structure peu claire",
+                    description: "Utilisez des listes numérotées ou à puces pour structurer vos demandes."
+                });
+            }
+            
+            // Conseils par modèle
+            const modelTips = {
+                'gpt4': "ChatGPT-4 excelle avec des instructions détaillées et des exemples concrets.",
+                'claude': "Claude préfère les conversations structurées avec un contexte clair.",
+                'gemini': "Gemini performant avec des requêtes précises et des données factuelles."
+            };
+            
+            if (modelTips[prompt.model]) {
+                tips.push({
+                    title: `Optimisation ${prompt.model.toUpperCase()}`,
+                    description: modelTips[prompt.model]
+                });
+            }
+            
+            return tips.length > 0 ? tips : [{
+                title: "Prompt bien optimisé",
+                description: "Votre prompt semble bien structuré et complet !"
+            }];
+        }
+
+        function filterPrompts() {
+            const searchTerm = document.getElementById('searchPrompts').value.toLowerCase();
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const modelFilter = document.getElementById('filterModel').value;
+            
+            const filteredPrompts = prompts.filter(prompt => {
+                const matchesSearch = prompt.title.toLowerCase().includes(searchTerm) ||
+                                    prompt.content.toLowerCase().includes(searchTerm) ||
+                                    prompt.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesCategory = !categoryFilter || prompt.category === categoryFilter;
+                const matchesModel = !modelFilter || prompt.model === modelFilter;
+                
+                return matchesSearch && matchesCategory && matchesModel;
+            });
+            
+            displayFilteredPrompts(filteredPrompts);
+        }
+
+        function displayFilteredPrompts(filteredPrompts) {
+            const promptList = document.getElementById('promptList');
+            
+            if (filteredPrompts.length === 0) {
+                promptList.innerHTML = `
+                    <div style="text-align: center; color: #718096; padding: 40px;">
+                        <h4>Aucun prompt trouvé</h4>
+                        <p>Essayez de modifier vos critères de recherche</p>
+                    </div>
+                `;
+                return;
+            }
+
+            promptList.innerHTML = filteredPrompts.map((prompt, index) => {
+                const originalIndex = prompts.findIndex(p => p.id === prompt.id);
+                return `
+                    <div class="prompt-item" onclick="selectPrompt(${originalIndex})">
+                        <div class="prompt-meta">
+                            <span class="prompt-title">${prompt.title}</span>
+                            <span class="prompt-category">${getCategoryLabel(prompt.category)}</span>
+                        </div>
+                        <div class="prompt-preview">${prompt.content.substring(0, 100)}...</div>
+                        <div class="tags">
+                            ${prompt.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #718096;">
+                            📊 ${prompt.usage || 0} utilisations • 🔧 ${prompt.variables.length} variables
+                            <button class="btn btn-danger btn-small" onclick="deletePrompt(${originalIndex}, event)" style="float: right;">🗑️</button>
+                            <button class="btn btn-secondary btn-small" onclick="editPrompt(${originalIndex}, event)" style="float: right; margin-right: 5px;">✏️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editPrompt(index, event) {
+            event.stopPropagation();
+            
+            const prompt = prompts[index];
+            document.getElementById('promptTitle').value = prompt.title;
+            document.getElementById('promptCategory').value = prompt.category;
+            document.getElementById('aiModel').value = prompt.model;
+            document.getElementById('promptContent').value = prompt.content;
+            document.getElementById('promptTags').value = prompt.tags.join(', ');
+            
+            currentPromptIndex = index;
+            detectVariables();
+            showNotification('Prompt chargé pour modification', 'success');
+        }
+
+        function deletePrompt(index, event) {
+            event.stopPropagation();
+            
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce prompt ?')) {
+                prompts.splice(index, 1);
+                localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+                loadPrompts();
+                updateStats();
+                
+                if (currentPromptIndex === index) {
+                    document.getElementById('promptEditor').style.display = 'none';
+                    currentPromptIndex = -1;
+                }
+                
+                showNotification('Prompt supprimé avec succès', 'success');
+            }
+        }
+
+        function exportPrompts() {
+            const dataStr = JSON.stringify(prompts, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `ai-prompts-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showNotification('Prompts exportés avec succès !', 'success');
+        }
+
+        function importPrompts() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedPrompts = JSON.parse(e.target.result);
+                    
+                    if (confirm(`Importer ${importedPrompts.length} prompts ? Cela ajoutera aux prompts existants.`)) {
+                        // Ajouter des IDs uniques aux prompts importés
+                        importedPrompts.forEach(prompt => {
+                            prompt.id = Date.now() + Math.random();
+                        });
+                        
+                        prompts = [...prompts, ...importedPrompts];
+                        localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+                        loadPrompts();
+                        updateStats();
+                        showNotification(`${importedPrompts.length} prompts importés avec succès !`, 'success');
+                    }
+                } catch (error) {
+                    showNotification('Erreur lors de l\'importation du fichier', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function updateStats() {
+            document.getElementById('totalPrompts').textContent = prompts.length;
+            
+            const categories = [...new Set(prompts.map(p => p.category))];
+            document.getElementById('totalCategories').textContent = categories.length;
+            
+            const totalVariables = prompts.reduce((total, prompt) => total + prompt.variables.length, 0);
+            document.getElementById('totalVariables').textContent = totalVariables;
+            
+            // Calcul du score d'optimisation
+            const optimizationScore = calculateOptimizationScore();
+            document.getElementById('optimizationScore').textContent = optimizationScore + '%';
+        }
+
+        function calculateOptimizationScore() {
+            if (prompts.length === 0) return 0;
+            
+            let totalScore = 0;
+            
+            prompts.forEach(prompt => {
+                let score = 50; // Score de base
+                
+                // Bonifications
+                if (prompt.content.length > 200) score += 10;
+                if (prompt.variables.length > 0) score += 15;
+                if (prompt.tags.length > 2) score += 10;
+                if (prompt.content.includes('1.') || prompt.content.includes('-')) score += 10;
+                if (prompt.usage > 0) score += 5;
+                
+                totalScore += Math.min(score, 100);
+            });
+            
+            return Math.round(totalScore / prompts.length);
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'development': 'Dev',
+                'writing': 'Rédaction',
+                'analysis': 'Analyse',
+                'creative': 'Créatif',
+                'business': 'Business',
+                'education': 'Éducation',
+                'custom': 'Personnalisé'
+            };
+            return labels[category] || category;
+        }
+
+        function openOptimizer() {
+            document.getElementById('optimizerModal').style.display = 'block';
+            
+            // Charger le prompt actuel s'il y en a un
+            if (currentPromptIndex >= 0) {
+                document.getElementById('optimizePrompt').value = prompts[currentPromptIndex].content;
+            }
+        }
+
+        function closeOptimizer() {
+            document.getElementById('optimizerModal').style.display = 'none';
+        }
+
+        function closeResult() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        function optimizePrompt() {
+            const promptText = document.getElementById('optimizePrompt').value;
+            if (!promptText.trim()) {
+                showNotification('Veuillez entrer un prompt à optimiser', 'error');
+                return;
+            }
+            
+            const selectedModel = document.querySelector('.model-card.selected');
+            const modelType = selectedModel ? selectedModel.dataset.model : 'general';
+            
+            const optimizedPrompt = generateOptimizedPrompt(promptText, modelType);
+            
+            document.getElementById('optimizedPromptContent').innerHTML = `
+                <div class="form-group">
+                    <label>Prompt Original :</label>
+                    <textarea class="form-control" rows="4" readonly>${promptText}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Prompt Optimisé :</label>
+                    <textarea class="form-control" rows="6" readonly>${optimizedPrompt}</textarea>
+                </div>
+                <div class="optimization-tips">
+                    <h4>Améliorations apportées :</h4>
+                    <ul>
+                        <li>✅ Structure claire avec instructions numérotées</li>
+                        <li>✅ Contexte et rôle définis</li>
+                        <li>✅ Format de réponse spécifié</li>
+                        <li>✅ Ton et style précisés</li>
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('optimizationResults').style.display = 'block';
+        }
+
+        function generateOptimizedPrompt(originalPrompt, modelType) {
+            const modelPrefixes = {
+                'gpt4': 'Tu es un assistant IA expert et créatif.',
+                'claude': 'Je suis Claude, un assistant IA développé par Anthropic.',
+                'gemini': 'En tant qu\'IA avancée de Google,',
+                'general': 'Tu es un assistant IA professionnel et compétent.'
+            };
+            
+            const prefix = modelPrefixes[modelType] || modelPrefixes['general'];
+            
+            return `${prefix}
+
+CONTEXTE ET RÔLE :
+${originalPrompt}
+
+INSTRUCTIONS DÉTAILLÉES :
+1. Analyse soigneusement la demande ci-dessus
+2. Fournis une réponse structurée et complète
+3. Utilise des exemples concrets quand c'est pertinent
+4. Assure-toi que ta réponse soit actionnable
+
+FORMAT DE RÉPONSE SOUHAITÉ :
+- Introduction claire du sujet
+- Points principaux bien organisés
+- Conclusion avec recommandations
+
+TON ET STYLE :
+- Professionnel mais accessible
+- Précis et détaillé
+- Orienté solution
+
+Peux-tu procéder à cette analyse en suivant ces directives ?`;
+        }
+
+        function copyFinalPrompt() {
+            const promptText = document.getElementById('finalPromptResult').value;
+            navigator.clipboard.writeText(promptText).then(() => {
+                showNotification('Prompt copié dans le presse-papiers !', 'success');
+            });
+        }
+
+        function saveFinalPrompt() {
+            const finalPrompt = document.getElementById('finalPromptResult').value;
+            const originalPrompt = prompts[currentPromptIndex];
+            
+            const newPrompt = {
+                id: Date.now(),
+                title: originalPrompt.title + ' (Généré)',
+                category: originalPrompt.category,
+                model: originalPrompt.model,
+                content: finalPrompt,
+                tags: [...originalPrompt.tags, 'generated'],
+                variables: [],
+                createdAt: new Date().toISOString(),
+                usage: 0
+            };
+            
+            prompts.push(newPrompt);
+            localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+            loadPrompts();
+            updateStats();
+            closeResult();
+            showNotification('Prompt final sauvegardé !', 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Gestion des clics sur les modèles d'IA
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.model-card')) {
+                document.querySelectorAll('.model-card').forEach(card => card.classList.remove('selected'));
+                e.target.closest('.model-card').classList.add('selected');
+            }
+        });
+
+        // Fermeture des modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        document.getElementById('promptForm').dispatchEvent(new Event('submit'));
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportPrompts();
+                        break;
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('searchPrompts').focus();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+
+        // Sauvegarde automatique du brouillon
+        let draftTimer;
+        document.getElementById('promptContent').addEventListener('input', function() {
+            clearTimeout(draftTimer);
+            draftTimer = setTimeout(() => {
+                const draft = {
+                    title: document.getElementById('promptTitle').value,
+                    category: document.getElementById('promptCategory').value,
+                    content: this.value,
+                    tags: document.getElementById('promptTags').value
+                };
+                localStorage.setItem('promptDraft', JSON.stringify(draft));
+            }, 1000);
+        });
+
+        // Restaurer le brouillon au chargement
+        window.addEventListener('load', function() {
+            const draft = localStorage.getItem('promptDraft');
+            if (draft) {
+                const draftData = JSON.parse(draft);
+                if (draftData.content && confirm('Un brouillon a été trouvé. Voulez-vous le restaurer ?')) {
+                    document.getElementById('promptTitle').value = draftData.title || '';
+                    document.getElementById('promptCategory').value = draftData.category || '';
+                    document.getElementById('promptContent').value = draftData.content || '';
+                    document.getElementById('promptTags').value = draftData.tags || '';
+                    detectVariables();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+---
+// src/components/Skills.astro
+const { id } = Astro.props;
+
+const skills = [
+  {
+    category: "Développement Frontend",
+    items: [
+      { name: "HTML5", level: 90, icon: "🟧" },
+      { name: "CSS3/SCSS", level: 85, icon: "🎨" },
+      { name: "JavaScript", level: 85, icon: "📜" },
+      { name: "TypeScript", level: 80, icon: "🔷" },
+      { name: "React", level: 80, icon: "⚛️" },
+      { name: "Astro", level: 75, icon: "🚀" }
+    ]
+  },
+  {
+    category: "Développement Backend",
+    items: [
+      { name: "Node.js", level: 80, icon: "🟢" },
+      { name: "Express", level: 75, icon: "📦" },
+      { name: "SQL", level: 80, icon: "🗄️" },
+      { name: "MongoDB", level: 70, icon: "🍃" },
+      { name: "REST API", level: 85, icon: "🔌" }
+    ]
+  },
+  {
+    category: "Outils & Autres",
+    items: [
+      { name: "Git", level: 85, icon: "🔀" },
+      { name: "Docker", level: 70, icon: "🐳" },
+      { name: "Figma", level: 75, icon: "✏️" },
+      { name: "CI/CD", level: 70, icon: "🔄" },
+      { name: "Linux", level: 80, icon: "🐧" }
+    ]
+  }
+];
+---
+
+<section id={id} class="py-20 bg-gray-50 dark:bg-gray-800">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">Mes Compétences</h2>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+      {skills.map(skillCategory => (
+        <div class="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <h3 class="text-xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
+            {skillCategory.category}
+          </h3>
+          
+          <div class="space-y-5">
+            {skillCategory.items.map(skill => (
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <div class="flex items-center">
+                    <span class="mr-2">{skill.icon}</span>
+                    <span class="text-gray-700 dark:text-gray-200 font-medium">{skill.name}</span>
+                  </div>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-600">
+                  <div 
+                    class="h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600" 
+                    style={`width: ${skill.level}%`}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skill-bar {
+    transition: width 1s ease-in-out;
+  }
+</style>

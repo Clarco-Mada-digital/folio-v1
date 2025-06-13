@@ -1,0 +1,51 @@
+---
+const { id } = Astro.props;
+---
+
+<section id={id} class="py-20 bg-white dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">À Propos de Moi</h2>
+    
+    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h3 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Qui suis-je ?</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Passionné par le développement web depuis plusieurs années, je mets mes compétences 
+          en développement front-end et back-end au service de projets innovants. 
+          Mon objectif est de créer des expériences utilisateur fluides et des applications web performantes.
+        </p>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Avec une solide expérience dans les technologies modernes comme React, Node.js et les bases de données, 
+          je suis capable de prendre en charge l'ensemble du cycle de développement d'une application.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium dark:bg-blue-900 dark:text-blue-100">
+            Développement Web
+          </span>
+          <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium dark:bg-green-900 dark:text-green-100">
+            UI/UX Design
+          </span>
+          <span class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium dark:bg-purple-900 dark:text-purple-100">
+            Performance
+          </span>
+        </div>
+      </div>
+      
+      <div class="relative">
+        <div class="bg-blue-100 dark:bg-blue-900 rounded-2xl p-1 inline-block">
+          <img 
+            src="/images/profile.png" 
+            alt="Photo de profil" 
+            class="w-full h-auto rounded-2xl"
+            width="400"
+            height="500"
+          />
+        </div>
+        <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg">
+          <span class="text-2xl font-bold">3+</span>
+          <p class="text-sm">Années d'expérience</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
