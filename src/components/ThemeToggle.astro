@@ -5,7 +5,7 @@
 <button 
   id="theme-toggle" 
   type="button"
-  class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+  class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
   aria-label="Changer le thème"
   data-theme-toggle
 >
@@ -33,20 +33,39 @@ if (typeof window !== 'undefined') {
       document.documentElement.classList.remove('dark');
       localStorage.theme = 'light';
     }
+    // Déclencher un événement personnalisé pour informer d'autres composants du changement de thème
+    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme } }));
   };
 
-  // Vérifier le thème au chargement
-  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    setTheme('dark');
-  } else {
-    setTheme('light');
-  }
+  // Fonction pour obtenir le thème préféré de l'utilisateur
+  const getPreferredTheme = () => {
+    if (localStorage.theme === 'dark' || localStorage.theme === 'light') {
+      return localStorage.theme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
 
-  // Ajouter l'écouteur d'événement en utilisant la délégation d'événements
+  // Appliquer le thème au chargement
+  const preferredTheme = getPreferredTheme();
+  setTheme(preferredTheme);
+
+  // Mettre à jour l'attribut data-theme pour les styles spécifiques
+  document.documentElement.setAttribute('data-theme', preferredTheme);
+
+  // Écouter les changements de préférence de thème du système
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.theme) {
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+
+  // Gérer le clic sur le bouton de bascule
   document.addEventListener('click', (event) => {
     if (event.target.closest('[data-theme-toggle]')) {
       const isDark = document.documentElement.classList.contains('dark');
       setTheme(isDark ? 'light' : 'dark');
+      // Mettre à jour l'attribut data-theme
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
     }
   });
 }

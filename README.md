@@ -1,20 +1,67 @@
-# Astro Starter Kit: Basics
+# Mon Portfolio Personnel
 
-```sh
-npm create astro@latest -- --template basics
+Bienvenue sur mon portfolio personnel, construit avec Astro et Tailwind CSS. Ce site présente mon travail, mes compétences et mon parcours professionnel.
+
+## ✨ Fonctionnalités
+
+- 🌓 Mode clair/sombre avec persistance des préférences
+- 🚀 Performances optimisées avec Astro
+- 📱 Design responsive
+- 🎨 Interface moderne et élégante
+
+## 🛠️ Technologies utilisées
+
+- [Astro](https://astro.build/) - Framework web tout-en-un
+- [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utilitaire
+- [TypeScript](https://www.typescriptlang.org/) - Typage statique pour JavaScript
+- [ESLint](https://eslint.org/) - Linter JavaScript/TypeScript
+- [Prettier](https://prettier.io/) - Formateur de code
+
+## 🚀 Démarrage local
+
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/Clarco-Mada-digital/folio-v1.git
+   cd folio-v1
+   ```
+
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
+
+3. **Démarrer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
+   Le site sera accessible à l'adresse [http://localhost:4321](http://localhost:4321)
+
+4. **Créer une version de production**
+   ```bash
+   npm run build
+   ```
+
+## 📁 Structure du projet
+
+```
+/
+├── public/           # Fichiers statiques (images, polices, etc.)
+├── src/
+│   ├── components/   # Composants réutilisables
+│   ├── layouts/      # Mises en page
+│   ├── pages/        # Pages du site
+│   └── styles/       # Fichiers de style globaux
+├── astro.config.mjs  # Configuration d'Astro
+└── tailwind.config.js # Configuration de Tailwind CSS
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## 📝 Licence
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus d'informations.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## 🙋‍♂️ Contact
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+Pour toute question ou suggestion, n'hésitez pas à me contacter !
 
 ```text
 /
